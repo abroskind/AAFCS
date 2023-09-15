@@ -19,7 +19,7 @@ struct ContentView: View {
     
     
     var body: some View {
-        let vc = HostedViewController()
+        HostedViewController()
             .ignoresSafeArea()
         SpriteView(scene: scene,options: [.allowsTransparency])
             .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
