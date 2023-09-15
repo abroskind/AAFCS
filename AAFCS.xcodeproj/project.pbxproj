@@ -14,6 +14,10 @@
 		6630BF7D2AB23ACC002A5556 /* AAFCSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6630BF7C2AB23ACC002A5556 /* AAFCSTests.swift */; };
 		6630BF872AB23ACC002A5556 /* AAFCSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6630BF862AB23ACC002A5556 /* AAFCSUITests.swift */; };
 		6630BF892AB23ACC002A5556 /* AAFCSUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6630BF882AB23ACC002A5556 /* AAFCSUITestsLaunchTests.swift */; };
+		6630BF962AB2427C002A5556 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6630BF952AB2427C002A5556 /* ViewController.swift */; };
+		6630BF982AB24386002A5556 /* HUDScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6630BF972AB24386002A5556 /* HUDScene.swift */; };
+		6630BF9B2AB275CD002A5556 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 6630BF9A2AB275CD002A5556 /* Collections */; };
+		6630BF9D2AB275CD002A5556 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 6630BF9C2AB275CD002A5556 /* DequeModule */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +49,8 @@
 		6630BF822AB23ACC002A5556 /* AAFCSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AAFCSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6630BF862AB23ACC002A5556 /* AAFCSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AAFCSUITests.swift; sourceTree = "<group>"; };
 		6630BF882AB23ACC002A5556 /* AAFCSUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AAFCSUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		6630BF952AB2427C002A5556 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		6630BF972AB24386002A5556 /* HUDScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUDScene.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +58,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6630BF9B2AB275CD002A5556 /* Collections in Frameworks */,
+				6630BF9D2AB275CD002A5556 /* DequeModule in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,6 +108,8 @@
 				6630BF6E2AB23ACC002A5556 /* Assets.xcassets */,
 				6630BF702AB23ACC002A5556 /* AAFCS.entitlements */,
 				6630BF712AB23ACC002A5556 /* Preview Content */,
+				6630BF952AB2427C002A5556 /* ViewController.swift */,
+				6630BF972AB24386002A5556 /* HUDScene.swift */,
 			);
 			path = AAFCS;
 			sourceTree = "<group>";
@@ -145,6 +155,10 @@
 			dependencies = (
 			);
 			name = AAFCS;
+			packageProductDependencies = (
+				6630BF9A2AB275CD002A5556 /* Collections */,
+				6630BF9C2AB275CD002A5556 /* DequeModule */,
+			);
 			productName = AAFCS;
 			productReference = 6630BF672AB23ACB002A5556 /* AAFCS.app */;
 			productType = "com.apple.product-type.application";
@@ -217,6 +231,9 @@
 				Base,
 			);
 			mainGroup = 6630BF5E2AB23ACB002A5556;
+			packageReferences = (
+				6630BF992AB275CD002A5556 /* XCRemoteSwiftPackageReference "swift-collections" */,
+			);
 			productRefGroup = 6630BF682AB23ACB002A5556 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -259,6 +276,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6630BF982AB24386002A5556 /* HUDScene.swift in Sources */,
+				6630BF962AB2427C002A5556 /* ViewController.swift in Sources */,
 				6630BF6D2AB23ACB002A5556 /* ContentView.swift in Sources */,
 				6630BF6B2AB23ACB002A5556 /* AAFCSApp.swift in Sources */,
 			);
@@ -419,6 +438,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "To acquire the target";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -457,6 +477,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "To acquire the target";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -612,6 +633,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6630BF992AB275CD002A5556 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6630BF9A2AB275CD002A5556 /* Collections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6630BF992AB275CD002A5556 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
+		};
+		6630BF9C2AB275CD002A5556 /* DequeModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6630BF992AB275CD002A5556 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = DequeModule;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6630BF5F2AB23ACB002A5556 /* Project object */;
 }

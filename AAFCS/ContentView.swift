@@ -5,17 +5,26 @@
 //  Created by Dmytro Abroskin on 13/09/2023.
 //
 
+
 import SwiftUI
+import SpriteKit
 
 struct ContentView: View {
+    var scene: SKScene {
+        let scene = HUDScene(size:CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
+        scene.scaleMode = .fill
+        scene.backgroundColor = .clear
+        return scene
+    }
+    
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
-        }
-        .padding()
+        let vc = HostedViewController()
+            .ignoresSafeArea()
+        SpriteView(scene: scene,options: [.allowsTransparency])
+            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+            .ignoresSafeArea()
+        
     }
 }
 
