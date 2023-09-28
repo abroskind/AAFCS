@@ -86,12 +86,14 @@ class TrackingImageView: UIView {
         
         if self.targetSpeedStart != CGPoint.zero {
             ctx.setStrokeColor(UIColor.white.cgColor)
-            ctx.setLineDash(phase: dashedPhase, lengths: [])
+            ctx.setLineDash(phase: dashedPhase, lengths: dashedLinesLengths)
             let p1 = scale(cornerPoint: self.targetSpeedStart, toImageViewPointInViewRect: rect)
             ctx.move(to: p1)
             let p2 = scale(cornerPoint: self.targetSpeedEnd, toImageViewPointInViewRect: rect)
             ctx.addLine(to: p2)
             ctx.strokePath()
+            
+
         }
         
         if self.targetReticle != CGPoint.zero {

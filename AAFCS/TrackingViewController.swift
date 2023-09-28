@@ -19,6 +19,7 @@ class TrackingViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
     private var distanceLabel: UILabel!
     private var angleLabel: UILabel!
     private var positionLabel: UILabel!
+    private var correctionLabel: UILabel!
     var trackingLevel = VNRequestTrackingLevel.accurate
     var session: AVCaptureSession?
     var previewLayer: AVCaptureVideoPreviewLayer?
@@ -55,22 +56,32 @@ class TrackingViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didPan(sender:)))
         
         self.view.addGestureRecognizer(panGestureRecognizer)
+    
         
         self.distanceLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 700, height: 21))
-        self.distanceLabel.center = CGPoint(x: 450, y: 700)
+        self.distanceLabel.center = CGPoint(x: 0, y: 0)
         self.distanceLabel.textAlignment = .center
         self.distanceLabel.text = "Distance"
         self.view.addSubview(self.distanceLabel)
         self.angleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 700, height: 21))
-        self.angleLabel.center = CGPoint(x: 450, y: 750)
+        self.angleLabel.center = CGPoint(x: 0, y: 0)
         self.angleLabel.textAlignment = .center
         self.angleLabel.text = "Angle"
         self.view.addSubview(self.angleLabel)
         self.positionLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 700, height: 21))
-        self.positionLabel.center = CGPoint(x: 450, y: 800)
+        self.positionLabel.center = CGPoint(x: 0, y: 0)
         self.positionLabel.textAlignment = .center
         self.positionLabel.text = "Position"
         self.view.addSubview(self.positionLabel)
+        
+        self.correctionLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 700, height: 30))
+        self.correctionLabel.center = CGPoint(x: 0, y: 0)
+        self.correctionLabel.textAlignment = .center
+        self.correctionLabel.text = ""
+        self.correctionLabel.textColor = UIColor.green
+        self.correctionLabel.font = .systemFont(ofSize: 25.0)
+        self.view.addSubview(self.correctionLabel)
+        
         self.trackedTarget = Target()
         
         sessionQueue.async { [unowned self] in
@@ -82,6 +93,10 @@ class TrackingViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
                 self.motionManager.deviceMotionUpdateInterval = 0.01
                 self.motionManager.startDeviceMotionUpdates()
             }
+            self.distanceLabel.center = CGPoint(x: self.view.frame.midX, y: self.view.frame.maxY-100)
+            self.angleLabel.center = CGPoint(x: self.view.frame.midX, y: self.view.frame.maxY-70)
+            self.positionLabel.center = CGPoint(x: self.view.frame.midX, y: self.view.frame.maxY-40)
+            self.correctionLabel.center = CGPoint(x: self.view.frame.midX, y: 50)
         }
 
     }
@@ -319,12 +334,13 @@ class TrackingViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         var droneAzimuth : CGFloat = 0.0
         var observedPositionX : CGFloat = 0.0
         var observedPositionY : CGFloat = 0.0
+        var observedSize : CGFloat = 0.0
         let droneSize = 3.0
         let v = 200.0 // projectile speed m/s
         let g = 9.8
         
         for inputObservation in self.inputObservations {
-            let observedSize = inputObservation.value.boundingBox.width
+            observedSize = inputObservation.value.boundingBox.width
             observedPositionX = inputObservation.value.boundingBox.midX
             observedPositionY = inputObservation.value.boundingBox.midY
             droneAzimuth = cameraYaw + (observedPositionX-0.5) * ( self.cameraFov / self.zoom )
@@ -340,6 +356,8 @@ class TrackingViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         var posY: CGFloat = 0.0
         var posY_corrected: CGFloat = 0.0
         var speedVec: Vector3D = Vector3D(x:0,y:0,z:0)
+        var corrAngle: CGFloat = 0.0
+        var corrDistance: CGFloat = 0.0
         if distance>0{
             self.trackedTarget.updatePosition(position: dronePos)
             if self.trackedTarget.positionHistory.count > 4 {
@@ -355,11 +373,15 @@ class TrackingViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
                 posX = (spherical.z - cameraYaw ) / ( self.cameraFov / self.zoom ) + 0.5
                 posY =  -((spherical.y - cameraPitch) / ( self.cameraFov / self.zoom ) / CGFloat(CVPixelBufferGetHeight(pixelBuffer)) * CGFloat(CVPixelBufferGetWidth(pixelBuffer)) - 0.5)
                 posY_corrected = -((spherical.y + rad * 180.0 / .pi - cameraPitch) / ( self.cameraFov / self.zoom ) / CGFloat(CVPixelBufferGetHeight(pixelBuffer)) * CGFloat(CVPixelBufferGetWidth(pixelBuffer)) - 0.5)
-                
 
                 
-
-
+                let correctionVector = vector2(posX-observedPositionX,posY_corrected-observedPositionY)
+                corrAngle = ((atan2(correctionVector.y,correctionVector.x)) * 180.0 / .pi + 90.0)
+                if corrAngle < 0 {
+                    corrAngle = 360 + corrAngle
+                }
+                corrAngle = corrAngle / 360 * 12
+                corrDistance = sqrt(correctionVector.x*correctionVector.x + correctionVector.y*correctionVector.y) / observedSize
                 
             }
         }
@@ -374,6 +396,12 @@ class TrackingViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
             self.trackingView.targetSpeedStart = CGPoint(x: observedPositionX, y: observedPositionY)
             self.trackingView.targetSpeedEnd = CGPoint(x: posX, y: posY)
             self.trackingView.targetReticle = CGPoint(x: posX, y: posY_corrected)
+            var corrAngleInt = Int(round(  corrAngle) )
+            if corrAngleInt == 0 {
+                corrAngleInt = 12
+            }
+            
+            self.correctionLabel.text = "Коригування "+String(corrAngleInt) + " годин, " + String(Double(round(10 * corrDistance) / 10)) + " довжин цілі"
             
             self.distanceLabel.text = "Target size: "+String(Double(round(10 * droneSize) / 10)) + "m, Target angular size: " + String(Double(round(10 * observedAngularSize) / 10)) + "deg"
             self.angleLabel.text = "(Spherical) Target distance: " + String(Double(round(10 * distance) / 10))+"m, Target Azimuth: "+String(Double(round(10 * droneAzimuth) / 10)) + "deg, Target Elevation: " + String(Double(round(10 * droneElevation) / 10)) + "deg"
