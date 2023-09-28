@@ -7,23 +7,23 @@
 
 
 import SwiftUI
-import SpriteKit
+//import SpriteKit
 
 struct ContentView: View {
-    var scene: SKScene {
+    /*var scene: SKScene {
         let scene = HUDScene(size:CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
         scene.scaleMode = .fill
         scene.backgroundColor = .clear
         return scene
-    }
+    }*/
     
     
     var body: some View {
-        HostedViewController()
+        HostedTrackingViewController()
             .ignoresSafeArea()
-        SpriteView(scene: scene,options: [.allowsTransparency])
+        /*SpriteView(scene: scene,options: [.allowsTransparency])
             .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-            .ignoresSafeArea()
+            .ignoresSafeArea()*/
         
     }
 }
